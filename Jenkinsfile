@@ -1,5 +1,4 @@
 node {
-    agents any
     stages {
         def app
         stage('Clone') {
