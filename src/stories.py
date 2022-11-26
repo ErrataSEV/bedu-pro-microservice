@@ -31,8 +31,6 @@ def health():
 
 @app.route("/story", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def story():
-
-print("No correct print")
     if request.method == 'GET':
         cursor = g.cnx.cursor()
         cursor.execute(f"SELECT ID, Info, Project FROM stories where Project={request.args['project']} AND Evaluated=0 LIMIT 1")
