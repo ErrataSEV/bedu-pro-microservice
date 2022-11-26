@@ -29,7 +29,7 @@ def health():
     resp.headers['Content-Type'] = 'application/json'
     return resp
 
-@app.route("/story", methods=['GET', 'POST', 'DELETE'])
+@app.route("/story", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def story():
     if request.method == 'GET':
         cursor = g.cnx.cursor()
@@ -45,17 +45,27 @@ def story():
         return response
     if request.method == 'POST':
         cursor = g.cnx.cursor()
-        cursor.execute(f"INSERT INTO stories (info, project) VALUES ('{request.args['info']}','{request.args['project']}')")
+        cursor.execute(f"INSERT INTO stories (info, project) VALUES ('{request.form['info']}','{request.form['project']}')")
         g.cnx.commit()
         response = app.response_class(
-            response=json.dumps({"msg":f"Saved {request.args['info']}"}),
+            response=json.dumps({"msg":f"Saved {request.form['info']}"}),
+            status=200,
+            mimetype='application/json'
+            )
+        return response
+    if request.method == 'PUT':
+        cursor = g.cnx.cursor()
+        cursor.execute(f"UPDATE stories set Evaluated=1 WHERE id = \"{request.form['id']}\"")
+        g.cnx.commit()
+        response = app.response_class(
+            response=json.dumps({"msg":"Deleted", "count": f"{cursor.rowcount}"}),
             status=200,
             mimetype='application/json'
             )
         return response
     if request.method == 'DELETE':
         cursor = g.cnx.cursor()
-        cursor.execute(f"DELETE FROM stories WHERE id = \"{request.args['id']}\"")
+        cursor.execute(f"DELETE FROM stories WHERE id = \"{request.form['id']}\"")
         g.cnx.commit()
         response = app.response_class(
             response=json.dumps({"msg":"Deleted", "count": f"{cursor.rowcount}"}),
