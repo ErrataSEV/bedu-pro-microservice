@@ -33,7 +33,7 @@ def health():
 def story():
     if request.method == 'GET':
         cursor = g.cnx.cursor()
-        cursor.execute(f"SELECT ID, story, Project FROM stories where Project={request.args['project']} AND Evaluated=0 LIMIT 1")
+        cursor.execute(f"SELECT ID, Info, Project FROM stories where Project={request.args['project']} AND Evaluated=0 LIMIT 1")
         results= []
         for (story_id, story_info, story_project) in cursor:
             results.append({"id":story_id, "info":story_info, "project": story_project})
